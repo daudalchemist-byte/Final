@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Manda 💌</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#ff9ecf,#ffb3d9,#ffc2e2,#ffd6ec);
+background-size:300% 300%;
+animation:bgMove 18s ease infinite;
+overflow-x:hidden;
+color:#4a1f33;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.scene{
+position:fixed;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+opacity:0;
+pointer-events:none;
+transition:1s ease;
+overflow-y:auto;
+}
+
+.scene.active{
+opacity:1;
+pointer-events:auto;
+}
+
+h1{
+font-family:'Dancing Script',cursive;
+font-size:3rem;
+margin-bottom:10px;
+}
+
+h2{
+font-family:'Playfair Display',serif;
+margin-bottom:20px;
+}
+
+button{
+margin:15px;
+padding:14px 28px;
+border:none;
+border-radius:40px;
+cursor:pointer;
+font-size:1rem;
+transition:0.3s ease;
+background:#d81b60;
+color:white;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+.no{
+background:#f8bbd0;
+color:#4a1f33;
+}
+
+/* Floating love */
+.love{
+position:fixed;
+bottom:-30px;
+pointer-events:none;
+animation:floatUp linear forwards;
+opacity:0.3;
+z-index:1;
+}
+
+@keyframes floatUp{
+0%{transform:translateY(0);}
+100%{transform:translateY(-110vh);}
+}
+
+/* Envelope */
+.envelope{
+width:320px;
+background:#ffc2e2;
+border-radius:12px;
+position:relative;
+box-shadow:0 20px 50px rgba(0,0,0,0.4);
+padding-bottom:20px;
+}
+
+.flap{
+position:absolute;
+top:-100px;
+width:100%;
+height:100px;
+background:#ec407a;
+clip-path:polygon(0 100%,50% 0,100% 100%);
+}
+
+.paper{
+background:white;
+margin-top:40px;
+margin-left:5%;
+width:90%;
+border-radius:8px;
+padding:20px;
+font-size:0.9rem;
+line-height:1.6;
+}
+
+/* Gallery vertical */
+.gallery-column{
+display:flex;
+flex-direction:column;
+gap:20px;
+width:100%;
+max-width:400px;
+}
+
+.gallery-column img{
+width:100%;
+border-radius:20px;
+object-fit:cover;
+box-shadow:0 10px 25px rgba(0,0,0,0.25);
+transition:0.4s ease;
+}
+
+.gallery-column img:hover{
+transform:scale(1.03);
+}
+
+.music-control{
+position:fixed;
+bottom:20px;
+right:20px;
+width:50px;height:50px;
+border-radius:50%;
+background:rgba(255,255,255,0.6);
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+z-index:20;
+}
+</style>
+</head>
+
+<body>
+
+<div id="intro" class="scene active">
+<h1>For Manda 💌</h1>
+<h2>Will you be my Valentine?</h2>
+<button id="yesBtn">Yes, always 💖</button>
+<button class="no" id="noBtn">No...</button>
+</div>
+
+<div id="letterScene" class="scene">
+<div class="envelope">
+<div class="flap"></div>
+<div class="paper">
+<p>
+Manda,<br><br>
+From the very beginning, you made everything feel lighter.
+You bring warmth into ordinary moments,
+and somehow the world feels softer when you're around.<br><br>
+I don’t just want today.
+I want all the small tomorrows with you.<br><br>
+Happy Valentine’s Day 🤍
+</p>
+</div>
+<button id="nextFromLetter">Next 🤍</button>
+</div>
+</div>
+
+<div id="gallery" class="scene">
+<h2>Our Memories 📸</h2>
+<div class="gallery-column">
+<img src="photo1.jpeg">
+<img src="photo2.jpeg">
+<img src="photo3.jpeg">
+</div>
+<button id="nextFromGallery">Next 🤍</button>
+</div>
+
+<div id="ending" class="scene">
+<h2>Some stories begin quietly.</h2>
+<p>And today, we began ours 🤍</p>
+<button id="finishBtn">Finish ✨</button>
+</div>
+
+<div class="music-control" onclick="toggleMusic()">🎵</div>
+<audio id="bgMusic" src="laufey-valentine.mp3"></audio>
+
+<script>
+const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
+const intro=document.getElementById("intro");
+const letterScene=document.getElementById("letterScene");
+const gallery=document.getElementById("gallery");
+const ending=document.getElementById("ending");
+const nextFromLetter=document.getElementById("nextFromLetter");
+const nextFromGallery=document.getElementById("nextFromGallery");
+const finishBtn=document.getElementById("finishBtn");
+const music=document.getElementById("bgMusic");
+
+let yesScale=1;
+music.volume=0.2;
+
+/* Floating hearts */
+function createLove(){
+let love=document.createElement("div");
+love.classList.add("love");
+love.innerHTML="💗";
+love.style.left=Math.random()*100+"vw";
+love.style.fontSize=(14+Math.random()*8)+"px";
+love.style.animationDuration=(10+Math.random()*5)+"s";
+document.body.appendChild(love);
+setTimeout(()=>{love.remove();},15000);
+}
+setInterval(createLove,3000);
+
+noBtn.addEventListener("click",()=>{
+yesScale+=0.15;
+yesBtn.style.transform=`scale(${yesScale})`;
+});
+
+yesBtn.addEventListener("click",()=>{
+intro.classList.remove("active");
+letterScene.classList.add("active");
+fadeInMusic();
+});
+
+nextFromLetter.addEventListener("click",()=>{
+letterScene.classList.remove("active");
+gallery.classList.add("active");
+});
+
+nextFromGallery.addEventListener("click",()=>{
+gallery.classList.remove("active");
+ending.classList.add("active");
+});
+
+finishBtn.addEventListener("click",()=>{
+ending.classList.remove("active");
+intro.classList.add("active");
+yesBtn.style.transform="scale(1)";
+yesScale=1;
+});
+
+function toggleMusic(){
+if(music.paused){music.play();}
+else{music.pause();}
+}
+
+function fadeInMusic(){
+music.play();
+music.volume=0;
+let vol=0;
+const fade=setInterval(()=>{
+if(vol<0.2){
+vol+=0.02;
+music.volume=vol;
+}else{
+clearInterval(fade);
+}
+},200);
+}
+</script>
+
+</body>
+</html>
